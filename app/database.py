@@ -14,7 +14,7 @@ db_name=os.getenv("DB_NAME")
 postgres_user = username
 postgres_password = password
 postgres_db = db_name
-postgres_host = "localhost" 
+postgres_host = "postgres" 
 postgres_port = 5432 
 
 postgres_url = f"postgresql://{postgres_user}:{postgres_password}@{postgres_host}:{postgres_port}/{postgres_db}"

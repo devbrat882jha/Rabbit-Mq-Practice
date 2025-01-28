@@ -14,6 +14,14 @@ product_router=APIRouter(prefix="/products",tags=["Products"])
 
 @product_router.post("/create")
 async def create_product(product_input:ProductBase,session:SessionDep):
+    type=['Electronics','Fashion','Coesmetic','Food']
+
+    if product_input.type not in type:
+         raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Product  type should be in in {type}"
+        )
+
     existing_product=session.exec(
                                 select(Product).where(
                                 Product.category==product_input.category.lower())
@@ -21,7 +29,7 @@ async def create_product(product_input:ProductBase,session:SessionDep):
     if existing_product:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail=f"Product of type '{product_input.type}' already exists."
+            detail=f"Product of category '{product_input.category}' already exists."
         )
 
     new_product = Product(
@@ -32,7 +40,7 @@ async def create_product(product_input:ProductBase,session:SessionDep):
         )
     session.add(new_product)
     session.commit()
-    return {"messaage":"Product has been created successfully","data":new_product}
+    return {"messaage":"Product has been created successfully"}
         
 
 @product_router.get("/list")
@@ -113,7 +121,5 @@ async def update_stock(
     return {"message": "Stock update event published"}
     
     
-
-
 
 

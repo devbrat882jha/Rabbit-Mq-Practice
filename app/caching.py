@@ -4,7 +4,7 @@ from app.database import SessionDep
 from sqlmodel import select
 from app.models import Product
 
-r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+r = redis.Redis(host='redis', port=6379, decode_responses=True)
 
 def increment_order_count(product_id:int):
     r.zincrby('product_order_count',1,product_id)

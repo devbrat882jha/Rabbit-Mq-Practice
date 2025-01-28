@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class ProductBase(BaseModel):
-    id:int
+
     type:str
     price:int
     category:str

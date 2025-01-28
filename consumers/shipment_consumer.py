@@ -7,7 +7,7 @@ import asyncio
 import websockets
 
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host="localhost")
+    pika.ConnectionParameters(host="rabbitmq",port=5672)
 )
 channel = connection.channel()
 
@@ -55,5 +55,8 @@ channel.basic_consume(
     queue="shipment", on_message_callback=process_message, auto_ack=True)
 
 
-print("Waiting for messages...")
-channel.start_consuming()
+
+if __name__ == "__main__":
+    
+    print("Waiting for messages...")
+    channel.start_consuming()

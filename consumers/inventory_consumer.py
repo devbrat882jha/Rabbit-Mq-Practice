@@ -10,7 +10,7 @@ import json
 
 
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host="localhost")
+    pika.ConnectionParameters(host="rabbitmq",port=5672)
 )
 channel = connection.channel()
 
@@ -62,5 +62,8 @@ channel.basic_consume(
     queue="inventory", on_message_callback=callback, auto_ack=True
 )
 
-print("Waiting for messages...")
-channel.start_consuming()
+
+if __name__ == "__main__":
+    
+    print("Waiting for messages...")
+    channel.start_consuming()

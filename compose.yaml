@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/var/lib/redis/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_container
+    ports:
+      - "5672:5672"  
+      - "15672:15672" 
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  postgres:
+    image: postgres:14-alpine
+    container_name: postgres_container
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  fastapi_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    container_name: fastapi_app
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    ports:
+      - "8080:8000"
+    volumes:
+      - .:/app
+
+  consumers_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.consumers
+    container_name: consumers_app
+    depends_on:
+      - rabbitmq
+      - postgres
+    volumes:
+      - .:/app
+   
+
+volumes:
+  redis_data:  
+  db_data:    
+  rabbitmq_data:
+
+

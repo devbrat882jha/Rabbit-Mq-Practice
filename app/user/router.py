@@ -101,6 +101,7 @@ async def place_order(user_id:int,
     for product in user_input.products
 ]
     order_data = {"id": order.id, "user_id": user_id, "products":product_dicts}
+
     publish_message(exchange="order", routing_key="inventory", message={"data":order_data, 
                                                                     "event": "placed"})
     publish_message(exchange="order", routing_key="email", message={"data":order_data, 
@@ -128,3 +129,5 @@ async def get_order_status(user_id:int,order_id:int,session:SessionDep):
     publish_message(exchange="order", routing_key="inventory", message={"data":data,"event": "cancelled"})
 
     return {"order":order,"message":f"Order with id :{order_id} has been cancelled"}
+
+
